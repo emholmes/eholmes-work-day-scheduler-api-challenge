@@ -24,32 +24,12 @@ let auditTimeBlocks = function(hourInt, description) {
     }
 }
 
-for (let i = 0; i < workHours.length; i++) {
-    let hourRow = $("<div>").addClass("row")
-        .attr("id", "row" + i);
-    $(".container").append(hourRow);
-    let hourDiv = $("<div>").addClass("hour col-1");
-    let hourInt = $("<p>").addClass("text-end pt-2").text(moment(workHours[i], "H").format("h" + "a"));
-    hourDiv.append(hourInt);
-    
-    
-    
-    let description = $("<textarea>").addClass("description col-10");
 
-
-    let saveButton = $("<button>").addClass("saveBtn col-1");
-    saveButton.append('<i class="far fa-save"></i>');
-    $("#row" + i).append(hourDiv).append(description).append(saveButton);
-
-    //debugger;
-    auditTimeBlocks(hourInt.text(), description);
-    
-}
 
 
 // function to collect info typed in 
 // save button handler
-
+// event delegation may help with this
 $(".row .saveBtn").click(function() {
     let toDoTime = $(this).parent(".row").find(".hour").text();
     //console.log(toDoTime);
