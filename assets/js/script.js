@@ -25,7 +25,9 @@ let auditTimeBlocks = function(hourInt, description) {
 
 let createToDos = function(arr, toDo) {
     
-    let rowDestination = $(".hour:contains("+toDo.hour+")");
+    let rowDestination = $(".hour").filter(function() {
+        return $(this).text() === toDo.hour;
+    });
     let rowDescription = rowDestination.next(".description");
 
     rowDescription.val(toDo.task);
@@ -67,9 +69,6 @@ $(".row").on("click", ".saveBtn", function() {
         });
     
     }
-
-    
-
     saveToDos();
     
 });
@@ -85,12 +84,10 @@ let loadToDos = function() {
     if (!savedToDos) {
         return;
     } 
-    
     $.each(savedToDos, function(arr, toDo) {
         createToDos(arr, toDo);
         //console.log(toDo.hour);
     })
-    
 }
 
 loadToDos();
