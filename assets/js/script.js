@@ -6,22 +6,27 @@ let hourlyToDos = [];
 
 let workHours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
 
-let auditTimeBlocks = function(hourInt, description) {
-    var divHour = hourInt;
+let auditTimeBlocks = function(el) {
+    let hour = $(el).find("p").text();
+    let description = $(el).find("textarea");
 
     for (let i = 0; i < workHours.length; i++) {
-        if (moment(divHour, "h" + "a").format("H") === moment().format("H")) {
+        if (moment(hour, "h" + "a").format("H") === moment().format("H")) {
             description.addClass("present");
         } 
         //change to use isAfter
-        if (moment(divHour, "h" + "a").format("H") > parseInt(moment().format("H"))) {
+        if (moment(hour, "h" + "a").format("H") > parseInt(moment().format("H"))) {
             description.addClass("future");
         } 
-        if (moment(divHour, "h" + "a").format("H") < parseInt(moment().format("H"))) {
+        if (moment(hour, "h" + "a").format("H") < parseInt(moment().format("H"))) {
             description.addClass("past");
         }
     }
 }
+
+$(".row").each(function(index, el) {
+    auditTimeBlocks(el);
+});
 
 let createToDos = function(arr, toDo) {
     
@@ -31,11 +36,13 @@ let createToDos = function(arr, toDo) {
     let rowDescription = rowDestination.next(".description");
 
     rowDescription.val(toDo.task);
-    //console.log(rowDescription);
+    
     hourlyToDos.push({
         hour: toDo.hour,
         task: toDo.task
     });
+
+
 }
 
 
@@ -45,7 +52,7 @@ $(".row").on("click", ".saveBtn", function() {
 
     let toDoHour = $("#" + mainDiv).children()[0].innerHTML;
     let toDoTask = $("#" + mainDiv + " textarea").val();
-    //console.log(toDoHour, "Task: " + toDoTask);
+    
 
     // if task for that day already exists, update task
     let newArray = [];
@@ -94,10 +101,11 @@ loadToDos();
 
 
 setInterval(function() {
-    $(".row").each(function(index) {
-        let hourToAudit = $(this).children(".hour").text();
-        let desc = $(this).children(".description");
-        auditTimeBlocks(hourToAudit, desc);
+    $(".row").each(function(index, el) {
+        // let hourToAudit = $(this).children(".hour").text();
+        // let desc = $(this).children(".description");
+        auditTimeBlocks(el);
+        //console.log(el);
     }) 
 }, 1000);
 
