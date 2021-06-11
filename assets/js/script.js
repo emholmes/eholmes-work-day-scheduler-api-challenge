@@ -1,11 +1,10 @@
 let day = moment().format("dddd, MMMM D");
 $("#currentDay").append(day);
 
-let hourlyToDos = {};
+let hourlyToDos = [];
 console.log(hourlyToDos);
 
 let workHours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
-
 
 let auditTimeBlocks = function(hourInt, description) {
     var divHour = hourInt;
@@ -24,25 +23,59 @@ let auditTimeBlocks = function(hourInt, description) {
     }
 }
 
+let createToDos = function(arr, toDo) {
+    
+    let rowDestination = $(".hour:contains("+toDo.hour+")");
+    let rowDescription = rowDestination.next(".description");
+
+    rowDescription.val(toDo.task);
+    console.log(rowDescription);
+    hourlyToDos.push({
+        hour: toDo.hour,
+        task: toDo.task
+    });
+}
 
 
+// save button click handler
+$(".row").on("click", ".saveBtn", function(event) {
+    console.log(event.target);
+    let mainDiv = event.target.closest("div").getAttribute("id");
 
-// function to collect info typed in 
-// save button handler
-// event delegation may help with this
-$(".row .saveBtn").click(function() {
-    let toDoTime = $(this).parent(".row").find(".hour").text();
-    //console.log(toDoTime);
-    let toDoDescription = $(this).parent(".row").find("textarea").val();
-    console.log(toDoDescription);
-    if (toDoDescription) {
-        hourlyToDos.push({
-            time: toDoTime,
-            description: toDoDescription
-        });
-        console.log(hourlyToDos);
-        saveToDos();
-    }
+    let toDoHour = $("#" + mainDiv).children()[0].innerHTML;
+    let toDoTask = $("#" + mainDiv + " textarea").val();
+    //console.log(toDoHour, "Task: " + toDoTask);
+
+    hourlyToDos.push({
+        hour: toDoHour, 
+        task: toDoTask
+    });
+    
+
+    saveToDos();
+    
+});
+
+
+$(".row").on("click", "textarea", function() {
+    let text = $(this).val().trim();
+    //console.log($(this).closest("div"));
+    let div = $(this).closest("div").attr('id');
+    //console.log(hourlyToDos[0].hour);
+    // for each index in hourlyToDos
+    let newArray = [];
+    $.each(hourlyToDos, function(index, value) {
+        let tasks = hourlyToDos[index].task;
+        
+        newArray.push(tasks);
+    })
+
+    console.log(newArray);
+
+    let index = newArray.indexOf(text);
+    console.log(index);
+
+    
 });
 
 
@@ -52,20 +85,17 @@ let saveToDos = function() {
 };
 
 let loadToDos = function() {
-    let savedToDos = localStorage.getItem("hourlyToDos");
-    if (!savedToDos) {
-        return false;
-    }
-    savedToDos = JSON.parse(savedToDos);
+    let savedToDos = JSON.parse(localStorage.getItem("hourlyToDos"));
 
-    for (let i = 0; i < savedToDos.length; i++) {
-        let rowDestination = $(".hour:contains("+savedToDos[i].time+")");
-        let rowDescription = rowDestination.next(".description");
-        rowDescription.val(savedToDos[i].description);
-        console.log(rowDescription);
-        // use time to locate where the description should go
-        
-    }
+    if (!savedToDos) {
+        return;
+    } 
+    
+    $.each(savedToDos, function(arr, toDo) {
+        createToDos(arr, toDo);
+        //console.log(toDo.hour);
+    })
+    
 }
 
 loadToDos();
