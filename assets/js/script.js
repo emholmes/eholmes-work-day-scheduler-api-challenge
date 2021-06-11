@@ -2,7 +2,7 @@ let day = moment().format("dddd, MMMM D");
 $("#currentDay").append(day);
 
 let hourlyToDos = [];
-console.log(hourlyToDos);
+//console.log(hourlyToDos);
 
 let workHours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
 
@@ -29,7 +29,7 @@ let createToDos = function(arr, toDo) {
     let rowDescription = rowDestination.next(".description");
 
     rowDescription.val(toDo.task);
-    console.log(rowDescription);
+    //console.log(rowDescription);
     hourlyToDos.push({
         hour: toDo.hour,
         task: toDo.task
@@ -38,46 +38,41 @@ let createToDos = function(arr, toDo) {
 
 
 // save button click handler
-$(".row").on("click", ".saveBtn", function(event) {
-    console.log(event.target);
-    let mainDiv = event.target.closest("div").getAttribute("id");
+$(".row").on("click", ".saveBtn", function() {
+    let mainDiv = $(this).closest("div").attr("id");
 
     let toDoHour = $("#" + mainDiv).children()[0].innerHTML;
     let toDoTask = $("#" + mainDiv + " textarea").val();
     //console.log(toDoHour, "Task: " + toDoTask);
 
-    hourlyToDos.push({
-        hour: toDoHour, 
-        task: toDoTask
-    });
+    // if task for that day already exists, update task
+    let newArray = [];
+    $.each(hourlyToDos, function(index) {
+        let hours = hourlyToDos[index].hour;
+        
+        newArray.push(hours);
+    })
+    console.log(newArray);
+     
+
+    let elIndex = newArray.indexOf(toDoHour);
+    console.log(elIndex);
+
+    if (elIndex !== -1) {
+        hourlyToDos[elIndex].task = toDoTask;
+    } else {
+        hourlyToDos.push({
+            hour: toDoHour, 
+            task: toDoTask
+        });
+    
+    }
+
     
 
     saveToDos();
     
 });
-
-
-$(".row").on("click", "textarea", function() {
-    let text = $(this).val().trim();
-    //console.log($(this).closest("div"));
-    let div = $(this).closest("div").attr('id');
-    //console.log(hourlyToDos[0].hour);
-    // for each index in hourlyToDos
-    let newArray = [];
-    $.each(hourlyToDos, function(index, value) {
-        let tasks = hourlyToDos[index].task;
-        
-        newArray.push(tasks);
-    })
-
-    console.log(newArray);
-
-    let index = newArray.indexOf(text);
-    console.log(index);
-
-    
-});
-
 
 
 let saveToDos = function() {
