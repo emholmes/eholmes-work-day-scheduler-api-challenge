@@ -30,6 +30,10 @@ textarea{
   border-radius: 15px;
 }
 
+li {
+  list-style-type: none;
+}
+
 .row {
   white-space: pre-wrap;
   height: 80px;
@@ -63,6 +67,10 @@ textarea{
   border-bottom-right-radius: 15px;
   background-color: #06AED5;
   color: white;
+}
+
+.saveBtn:hover {
+  color: #000000;
 }
 
 .saveBtn i:hover {
