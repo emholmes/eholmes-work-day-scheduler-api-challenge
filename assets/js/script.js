@@ -27,25 +27,25 @@ $(".row").each(function(index, el) {
     auditTimeBlocks(el);
 });
 
-let createToDos = function(arr, toDo) {
+let createTasks = function(arr, task) {
     let rowDestination = $(".hour").filter(function() {
-        return $(this).text() === toDo.hour;
+        return $(this).text() === task.hour;
     });
     let rowDescription = rowDestination.next(".description");
 
-    rowDescription.val(toDo.task);
+    rowDescription.val(task.details);
     
     hourlyTasks.push({
-        hour: toDo.hour,
-        task: toDo.task
+        hour: task.hour,
+        details: task.details
     });
 }
 
 // save button click handler
 $(".row").on("click", ".saveBtn", function() {
-    let mainDiv = $(this).closest("div").attr("id");
-    let toDoHour = $("#" + mainDiv).children()[0].innerHTML;
-    let toDoTask = $("#" + mainDiv + " textarea").val();
+    let rowId = $(this).closest("div").attr("id");
+    let taskHour = $("#" + rowId).children()[0].innerHTML;
+    let taskDetails = $("#" + rowId + " textarea").val();
     
     // if task for that day already exists, update task
     let tempArray = [];
@@ -54,32 +54,32 @@ $(".row").on("click", ".saveBtn", function() {
         tempArray.push(hours);
     })
 
-    let elIndex = tempArray.indexOf(toDoHour);
+    let elIndex = tempArray.indexOf(taskHour);
     if (elIndex !== -1) {
-        hourlyTasks[elIndex].task = toDoTask;
+        hourlyTasks[elIndex].details = taskDetails;
     } else {
         hourlyTasks.push({
-            hour: toDoHour, 
-            task: toDoTask
+            hour: taskHour, 
+            details: taskDetails
         });
     }
-    saveToDos();   
+    saveAllTasks();   
 });
 
-let saveToDos = function() {
+let saveAllTasks = function() {
     localStorage.setItem("hourlyTasks", JSON.stringify(hourlyTasks));
 };
 
-let loadToDos = function() {
-    let savedToDos = JSON.parse(localStorage.getItem("hourlyTasks"));
-    if (!savedToDos) {
+let loadAllTasks = function() {
+    let savedTasks = JSON.parse(localStorage.getItem("hourlyTasks"));
+    if (!savedTasks) {
         return;
     } 
-    $.each(savedToDos, function(arr, toDo) {
-        createToDos(arr, toDo);
+    $.each(savedTasks, function(arr, task) {
+        createTasks(arr, task);
     })
 }
-loadToDos();
+loadAllTasks();
 
 
 setInterval(function() {
