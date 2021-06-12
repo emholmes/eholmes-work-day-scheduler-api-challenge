@@ -43,7 +43,7 @@ let createTasks = function(arr, task) {
 
 // save button click handler
 $(".row").on("click", ".saveBtn", function() {
-    let rowId = $(this).closest("div").attr("id");
+    let rowId = $(this).closest("li").attr("id");
     let taskHour = $("#" + rowId).children()[0].innerHTML;
     let taskDetails = $("#" + rowId + " textarea").val();
     
