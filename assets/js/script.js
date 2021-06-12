@@ -84,9 +84,9 @@ let loadAllTasks = function() {
 loadAllTasks();
 
 // run auditTimeBlocks to ensure correct color coding
-setInterval(function() {
-    $(".row").each(function(index, el) {
-        auditTimeBlocks(el);
-    }) 
-}, 1000);
+// setInterval(function() {
+//     $(".row").each(function(index, el) {
+//         auditTimeBlocks(el);
+//     }) 
+// }, 1000);
 
