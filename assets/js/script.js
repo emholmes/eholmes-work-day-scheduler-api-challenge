@@ -7,17 +7,17 @@ let auditTimeBlocks = function(el) {
     let hourEl = $(el).find("p").text();
     let descriptionEl = $(el).find("textarea");
 
-    let hourBlockHour = moment(hourEl, "h" + "a").format("H");
+    let scheduleHour = moment(hourEl, "h" + "a").format("H");
     let currentHour = parseInt(moment().format("H"));
     $(".row").each(function() {
         descriptionEl.removeClass("future past present");
-        if (hourBlockHour === moment().format("H")) {
+        if (scheduleHour === moment().format("H")) {
             descriptionEl.addClass("present");
         } 
-        if (hourBlockHour > currentHour) {
+        if (scheduleHour > currentHour) {
             descriptionEl.addClass("future");
         } 
-        if (hourBlockHour < currentHour) {
+        if (scheduleHour < currentHour) {
             descriptionEl.addClass("past");
         }
     });
@@ -29,12 +29,12 @@ $(".row").each(function(index, el) {
 
 // used to create any tasks saved in localStorage
 let createTasks = function(arr, task) {
-    let rowDestination = $(".hour").filter(function() {
+    let targetRow = $(".hour").filter(function() {
         return $(this).text() === task.hour;
     });
-    let rowDescription = rowDestination.next(".description");
+    let rowTextarea = targetRow.next(".description");
 
-    rowDescription.val(task.details);
+    rowTextarea.val(task.details);
     
     hourlyTasks.push({
         hour: task.hour,
