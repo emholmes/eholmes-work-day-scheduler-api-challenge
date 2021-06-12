@@ -22,11 +22,12 @@ let auditTimeBlocks = function(el) {
         }
     });
 }
-
+// run audit of time blocks immediately
 $(".row").each(function(index, el) {
     auditTimeBlocks(el);
 });
 
+// used to create any tasks saved in localStorage
 let createTasks = function(arr, task) {
     let rowDestination = $(".hour").filter(function() {
         return $(this).text() === task.hour;
@@ -79,9 +80,10 @@ let loadAllTasks = function() {
         createTasks(arr, task);
     })
 }
+// initial load of any saved tasks 
 loadAllTasks();
 
-
+// run auditTimeBlocks to ensure correct color coding
 setInterval(function() {
     $(".row").each(function(index, el) {
         auditTimeBlocks(el);
