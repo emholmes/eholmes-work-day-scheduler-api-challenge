@@ -24,40 +24,39 @@ $(".description").each(function(index) {
 });
 
 // used to create any tasks saved in localStorage
-let createTasks = function(arr, task) {
-    let targetRow = $(".hour").filter(function() {
-        return $(this).text() === task.hour;
-    });
-    let rowTextarea = targetRow.next(".description");
-
-    rowTextarea.val(task.details);
+let createTasks = function(index, task) {
+    let rowDescription = $("#row" + task.hour).find(".description");
+    rowDescription.val(task.description);
     
     hourlyTasks.push({
         hour: task.hour,
-        details: task.details
+        description: task.description
     });
 }
 
 // save button click handler
 $(".row").on("click", ".saveBtn", function() {
-    let rowId = $(this).closest("li").attr("id");
-    let taskHour = $("#" + rowId).children()[0].innerHTML;
-    let taskDetails = $("#" + rowId + " textarea").val();
+    let descriptionEl = $(this).parent().find(".description");
+    let taskDescription = descriptionEl.val();
+    let taskHour = descriptionEl.data("hour");
     
     // if task for that day already exists, update task
-    let tempArray = [];
+    let hoursWithTasks = [];
+    let found = false;
     $.each(hourlyTasks, function(index) {
-        let hours = hourlyTasks[index].hour;
-        tempArray.push(hours);
-    })
+        let hour = hourlyTasks[index].hour;
+        hoursWithTasks.push(hour);
 
-    let elIndex = tempArray.indexOf(taskHour);
-    if (elIndex !== -1) {
-        hourlyTasks[elIndex].details = taskDetails;
-    } else {
+        if (hour === taskHour) {
+            hourlyTasks[index].description = taskDescription;
+            found = true;
+        } 
+    });
+
+    if (!found) {
         hourlyTasks.push({
             hour: taskHour, 
-            details: taskDetails
+            description: taskDescription
         });
     }
     saveAllTasks();   
@@ -72,8 +71,8 @@ let loadAllTasks = function() {
     if (!savedTasks) {
         return;
     } 
-    $.each(savedTasks, function(arr, task) {
-        createTasks(arr, task);
+    $.each(savedTasks, function(index, task) {
+        createTasks(index, task);
     })
 }
 // initial load of any saved tasks 
