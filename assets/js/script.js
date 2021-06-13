@@ -3,28 +3,24 @@ $("#currentDay").append(currentDay);
 
 let hourlyTasks = [];
 
-let auditTimeBlocks = function(el) {
-    let hourEl = $(el).find("p").text();
-    let descriptionEl = $(el).find("textarea");
-
-    let scheduleHour = moment(hourEl, "h" + "a").format("H");
+let colorCodeDescriptions = function(descriptionEl) {
+    const hour = descriptionEl.data("hour");
     let currentHour = parseInt(moment().format("H"));
-    $(".row").each(function() {
-        descriptionEl.removeClass("future past present");
-        if (scheduleHour === moment().format("H")) {
-            descriptionEl.addClass("present");
-        } 
-        if (scheduleHour > currentHour) {
-            descriptionEl.addClass("future");
-        } 
-        if (scheduleHour < currentHour) {
-            descriptionEl.addClass("past");
-        }
-    });
+
+    descriptionEl.removeClass("future past present");
+    if (hour === currentHour) {
+        descriptionEl.addClass("present");
+    } 
+    if (hour > currentHour) {
+        descriptionEl.addClass("future");
+    } 
+    if (hour < currentHour) {
+        descriptionEl.addClass("past");
+    }
 }
 // run audit of time blocks immediately
-$(".row").each(function(index, el) {
-    auditTimeBlocks(el);
+$(".description").each(function(index) {
+    colorCodeDescriptions($(this));
 });
 
 // used to create any tasks saved in localStorage
@@ -83,10 +79,10 @@ let loadAllTasks = function() {
 // initial load of any saved tasks 
 loadAllTasks();
 
-// run auditTimeBlocks to ensure correct color coding
+// run colorCodeDescriptions to ensure correct color coding
 setInterval(function() {
-    $(".row").each(function(index, el) {
-        auditTimeBlocks(el);
+    $(".description").each(function(index) {
+        colorCodeDescriptions($(this));
     }) 
 }, 1000);
 
